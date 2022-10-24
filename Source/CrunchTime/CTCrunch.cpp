@@ -14,6 +14,12 @@ ACTCrunch::ACTCrunch()
 	PlayerEye->SetupAttachment(cameraBoom, USpringArmComponent::SocketName);
 }
 
+void ACTCrunch::BeginPlay()
+{
+	Super::BeginPlay();
+	cameraBoom->TargetArmLength = FMath::Clamp(cameraBoom->TargetArmLength, ZoomRange.X, ZoomRange.Y);
+}
+
 void ACTCrunch::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -50,14 +56,7 @@ void ACTCrunch::Turn(float value)
 
 void ACTCrunch::Zoom(float value)
 {
-	if (value == 1)
-	{
-		cameraBoom->TargetArmLength += -zoomAmount;
-	}
 
-	if (value == -1)
-	{
-		cameraBoom->TargetArmLength += zoomAmount;
-	}
+	cameraBoom->TargetArmLength = FMath::Clamp(cameraBoom->TargetArmLength - value * zoomAmount, ZoomRange.X, ZoomRange.Y);
 
 }

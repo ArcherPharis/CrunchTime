@@ -17,12 +17,17 @@ class CRUNCHTIME_API ACTCrunch : public ACTCharacterBase
 public:
 	ACTCrunch();
 
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Crunch")
 	class USpringArmComponent* cameraBoom;
 
 	UPROPERTY(VisibleAnywhere, Category = "Crunch")
 	float zoomAmount = 5.0f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Crunch")
+	FVector2D ZoomRange{300.f, 1000.f};
 
 	UPROPERTY(VisibleAnywhere, Category = "Crunch")
 	class UCameraComponent* PlayerEye;
