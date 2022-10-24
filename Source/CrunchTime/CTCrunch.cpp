@@ -36,12 +36,12 @@ void ACTCrunch::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACTCrunch::MoveForward(float value)
 {
-	AddMovementInput(GetActorForwardVector(), value);
+	AddMovementInput(FVector(PlayerEye->GetForwardVector().X, PlayerEye->GetForwardVector().Y,0 ).GetSafeNormal(),value);
 }
 
 void ACTCrunch::MoveRight(float value)
 {
-	AddMovementInput(GetActorRightVector(), value);
+	AddMovementInput(PlayerEye->GetRightVector(), value);
 }
 
 void ACTCrunch::LookUp(float value)
