@@ -29,6 +29,8 @@ void ACTCrunch::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("Turn", this, &ACTCrunch::Turn);
 	PlayerInputComponent->BindAxis("Zoom", this, &ACTCrunch::Zoom);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACTCrunch::Jump);
+	PlayerInputComponent->BindAction("BasicAttack", IE_Pressed, this, &ACTCrunch::BasicAttack);
+
 
 
 

@@ -17,7 +17,8 @@ class CRUNCHTIME_API ACTCrunch : public ACTCharacterBase
 public:
 	ACTCrunch();
 
-	virtual void BeginPlay() override;
+	
+;	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Crunch")
