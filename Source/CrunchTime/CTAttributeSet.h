@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "AttributeSet.h"
+#include "AbilitySystemComponent.h"
 #include "CTAttributeSet.generated.h"
 
 	#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
@@ -24,6 +26,8 @@ class CRUNCHTIME_API UCTAttributeSet : public UAttributeSet
 
 public:
 
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 public:
 	UPROPERTY()
 	FGameplayAttributeData Health;
@@ -32,5 +36,13 @@ public:
 	UPROPERTY()
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UCTAttributeSet, MaxHealth);
+
+	UPROPERTY()
+	FGameplayAttributeData Stamina;
+	ATTRIBUTE_ACCESSORS(UCTAttributeSet, Stamina);
+
+	UPROPERTY()
+	FGameplayAttributeData MaxStamina;
+	ATTRIBUTE_ACCESSORS(UCTAttributeSet, MaxStamina);
 	
 };

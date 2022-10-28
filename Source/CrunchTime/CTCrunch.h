@@ -20,6 +20,7 @@ public:
 	
 ;	virtual void BeginPlay() override;
 
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Crunch")
 	class USpringArmComponent* cameraBoom;
@@ -33,6 +34,8 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Crunch")
 	class UCameraComponent* PlayerEye;
 
+
+
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	void MoveForward(float value);
@@ -40,5 +43,6 @@ private:
 	void LookUp(float value);
 	void Turn(float value);
 	void Zoom(float value);
+
 };
 

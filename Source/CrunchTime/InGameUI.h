@@ -17,5 +17,8 @@ class CRUNCHTIME_API UInGameUI : public UUserWidget
 public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "InGameUI")
 	void UpdateHealth(float newHealth, float maxHealth);
+
+	UFUNCTION(BlueprintImplementableEvent, Category = "InGameUI")
+	void UpdateStamina(float newStamina, float maxStamina);
 	
 };

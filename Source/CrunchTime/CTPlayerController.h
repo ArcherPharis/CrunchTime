@@ -31,5 +31,7 @@ private:
 	UInGameUI* inGameUI;
 
 	void HealthUpdated(const FOnAttributeChangeData& AttributeData);
+
+	void StaminaUpdated(const FOnAttributeChangeData& AttributeData);
 	
 };

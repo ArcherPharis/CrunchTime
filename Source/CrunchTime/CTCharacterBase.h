@@ -7,6 +7,8 @@
 #include "AbilitySystemInterface.h"
 #include "CTCharacterBase.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStopSprinting);
+
 UCLASS()
 class CRUNCHTIME_API ACTCharacterBase : public ACharacter, public IAbilitySystemInterface
 {
@@ -17,6 +19,10 @@ public:
 	ACTCharacterBase();
 	void ApplyInitialEffect();
 	virtual void PossessedBy(AController* NewController) override;
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	bool CharacterIsSprinting() const { return bIsRunning; }
+
+	FOnStopSprinting onStopSprinting;
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,15 +31,19 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "GameplayAbilities")
 	void ApplyEffectToSelf(const TSubclassOf<class UGameplayEffect>& effectToApply);
 	void BasicAttack();
+	void Sprint();
+	void StopSprint();
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
+	void RegenStamina(TSubclassOf<class UGameplayEffect> regenEffect);
 	FORCEINLINE class UCTAttributeSet* GetAttributeSet() const { return attributeSet; }
+	void SprintDepletedStopSprint();
 
 private:
-
+	bool IsStaminaFull();
 	
 	UPROPERTY()
 	class UCT_AbilitySystemComponent* abilitySystemComp;
@@ -47,7 +57,21 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
 	TSubclassOf<class UGameplayAbility> BasicAttackAbility;
 
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
+	TSubclassOf<class UGameplayAbility> SprintAbility;
+
+
+
 	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	float sprintMultiplier = 1.5f;
+
+
+
+	bool bIsRunning = false;
+
+
 
 
 

@@ -30,6 +30,8 @@ void ACTCrunch::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("Zoom", this, &ACTCrunch::Zoom);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACTCrunch::Jump);
 	PlayerInputComponent->BindAction("BasicAttack", IE_Pressed, this, &ACTCrunch::BasicAttack);
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACTCrunch::Sprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACTCrunch::StopSprint);
 
 
 
@@ -62,3 +64,5 @@ void ACTCrunch::Zoom(float value)
 	cameraBoom->TargetArmLength = FMath::Clamp(cameraBoom->TargetArmLength - value * zoomAmount, ZoomRange.X, ZoomRange.Y);
 
 }
+
+

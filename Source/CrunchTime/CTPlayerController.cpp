@@ -21,6 +21,7 @@ void ACTPlayerController::OnPossess(APawn* InPawn)
 	if (Crunch)
 	{
 		Crunch->GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(Crunch->GetAttributeSet()->GetHealthAttribute()).AddUObject(this, &ACTPlayerController::HealthUpdated);
+		Crunch->GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(Crunch->GetAttributeSet()->GetStaminaAttribute()).AddUObject(this, &ACTPlayerController::StaminaUpdated);
 		Crunch->ApplyInitialEffect();
 	}
 
@@ -30,4 +31,15 @@ void ACTPlayerController::HealthUpdated(const FOnAttributeChangeData& AttributeD
 {
 	inGameUI->UpdateHealth(AttributeData.NewValue, Crunch->GetAttributeSet()->GetMaxHealth());
 
+
+
+}
+
+void ACTPlayerController::StaminaUpdated(const FOnAttributeChangeData& AttributeData)
+{
+	inGameUI->UpdateStamina(AttributeData.NewValue, Crunch->GetAttributeSet()->GetMaxStamina());
+	if (Crunch->GetAttributeSet()->GetStamina() == 0)
+	{
+		Crunch->SprintDepletedStopSprint();
+	}
 }
