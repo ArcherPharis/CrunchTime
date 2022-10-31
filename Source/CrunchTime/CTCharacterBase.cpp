@@ -5,6 +5,7 @@
 #include "CT_AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "HitDetectionComponent.h"
 #include "CTAttributeSet.h"
 
 // Sets default values
@@ -14,13 +15,20 @@ ACTCharacterBase::ACTCharacterBase()
 	PrimaryActorTick.bCanEverTick = true;
 	abilitySystemComp = CreateDefaultSubobject<UCT_AbilitySystemComponent>(TEXT("Ability System Comp"));
 	attributeSet = CreateDefaultSubobject<UCTAttributeSet>(TEXT("Attribute Set"));
+	hitDetectionComp = CreateDefaultSubobject<UHitDetectionComponent>(TEXT("Hit Detection Component"));
+	hitDetectionComp->SetupAttachment(GetMesh());
 
 
 }
 
 void ACTCharacterBase::ApplyInitialEffect()
 {
-	ApplyEffectToSelf(InitialEffect);
+	for (auto effect : InitialEffects)
+	{
+		ApplyEffectToSelf(effect);
+	}
+
+	//abilitySystemComp->GetGameplayAttributeValueChangeDelegate(attributeSet->GetHealthAttribute().AddUObject)//add something to health changed fixed k2shit
 }
 
 void ACTCharacterBase::PossessedBy(AController* NewController)
@@ -42,7 +50,7 @@ void ACTCharacterBase::BeginPlay()
 
 void ACTCharacterBase::ApplyEffectToSelf(const TSubclassOf<class UGameplayEffect>& effectToApply)
 {
-	FGameplayEffectSpecHandle InitialSpec = abilitySystemComp->MakeOutgoingSpec(InitialEffect, -1, abilitySystemComp->MakeEffectContext());
+	FGameplayEffectSpecHandle InitialSpec = abilitySystemComp->MakeOutgoingSpec(effectToApply, -1, abilitySystemComp->MakeEffectContext());
 	abilitySystemComp->ApplyGameplayEffectSpecToSelf(*InitialSpec.Data);
 }
 
@@ -52,7 +60,7 @@ void ACTCharacterBase::BasicAttack()
 
 	if (meleeSpec->IsActive())
 	{
-		//do next combo, go to next montage section
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, BasicAttackCombo, FGameplayEventData());
 	}
 	else
 	{

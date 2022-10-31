@@ -4,6 +4,7 @@
 #include "GA_Melee.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void UGA_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -24,6 +25,19 @@ void UGA_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 		WaitComboChange->EventReceived.AddDynamic(this, &UGA_Melee::UpdateCombo);
 		WaitComboChange->ReadyForActivation();
 	}
+
+	UAbilityTask_WaitGameplayEvent* WaitCommitChange = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, ComboCommitTag, nullptr, false, false);
+	if (WaitCommitChange)
+	{
+		WaitCommitChange->EventReceived.AddDynamic(this, &UGA_Melee::ComboCommit);
+		WaitCommitChange->ReadyForActivation();
+	}
+	UAbilityTask_WaitGameplayEvent* WaitHit = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitTag, nullptr, false, false);
+	if (WaitHit)
+	{
+		WaitCommitChange->EventReceived.AddDynamic(this, &UGA_Melee::Hit);
+		WaitCommitChange->ReadyForActivation();
+	}
 }
 
 void UGA_Melee::MontageFinshed()
@@ -32,9 +46,85 @@ void UGA_Melee::MontageFinshed()
 	EndAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(),GetCurrentActivationInfo(), false, false);
 }
 
+void UGA_Melee::ComboCommit(FGameplayEventData Payload)
+{
+
+	if (NextComboSectionName == "")
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* mesh = GetOwningComponentFromActorInfo();
+
+	if (mesh)
+	{
+		UAnimInstance* animbp = mesh->GetAnimInstance();
+
+		if (animbp->Montage_GetCurrentSection() == NextComboSectionName)
+		{
+			return;
+		}
+
+
+
+		if (animbp)
+		{
+			animbp->Montage_SetNextSection(animbp->Montage_GetCurrentSection(), NextComboSectionName, animbp->GetCurrentActiveMontage());
+			
+		}
+	}
+
+}
+
+void UGA_Melee::Hit(FGameplayEventData Payload)
+{
+
+	if (Payload.TargetData.Num() == 0) return;
+
+	for (TSharedPtr<FGameplayAbilityTargetData>& data : Payload.TargetData.Data)
+	{
+		for (TWeakObjectPtr<AActor>& actorWeakPtr : data->GetActors())
+		{
+			AActor* HitTarget = actorWeakPtr.Get();
+			
+
+
+			//UE_LOG(LogTemp, Warning, TEXT("I am now hitting %s"), *HitTarget->GetName());
+		}
+	}
+
+
+
+	FGameplayEffectSpecHandle handle = MakeOutgoingGameplayEffectSpec(hitEffect, Payload.EventMagnitude);
+	//K2_ApplyGameplayEffectSpecToOwner()
+
+
+}
+
 void UGA_Melee::UpdateCombo(FGameplayEventData Payload)
 {
-	nextComboTag = Payload.EventTag;
-	UE_LOG(LogTemp, Warning, TEXT("Getting Tag: %s"), *nextComboTag.ToString());
+	FGameplayTag nextComboTag = Payload.EventTag;
+	int tagCount = Payload.TargetTags.Num();
+
+	if (tagCount == 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No next combo"));
+		NextComboSectionName = "";
+		return;
+
+	}
+	int comboPickIndex = FMath::RandRange(0, tagCount - 1);
+
+	FGameplayTag pickedTag = Payload.TargetTags.GetByIndex(comboPickIndex);
+	FGameplayTag parentTag = pickedTag.RequestDirectParent();
+
+	FString TagStr = pickedTag.ToString();
+	FString ParentStr = parentTag.ToString() + ".";
+
+	TagStr.RemoveAt(0, ParentStr.Len());
+
+	NextComboSectionName = FName(TagStr);
+
+	UE_LOG(LogTemp, Warning, TEXT("Getting Tag: %s"), *NextComboSectionName.ToString());
 
 }

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 #include "CTCharacterBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStopSprinting);
@@ -52,7 +53,7 @@ private:
 	UCTAttributeSet* attributeSet;
 
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
-	TSubclassOf<class UGameplayEffect> InitialEffect;
+	TArray<TSubclassOf<class UGameplayEffect>> InitialEffects;
 
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
 	TSubclassOf<class UGameplayAbility> BasicAttackAbility;
@@ -60,6 +61,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
 	TSubclassOf<class UGameplayAbility> SprintAbility;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	FGameplayTag BasicAttackCombo;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+		class UHitDetectionComponent* hitDetectionComp;
 
 
 	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility);

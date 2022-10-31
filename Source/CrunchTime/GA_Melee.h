@@ -24,11 +24,26 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Melee")
 	FGameplayTag ComboChangeTag;
 
-	FGameplayTag nextComboTag;
+	UPROPERTY(EditDefaultsOnly, Category = "Melee")
+	FGameplayTag ComboCommitTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Melee")
+	FGameplayTag HitTag;
+
+	FName NextComboSectionName;
 
 	UFUNCTION()
 	void MontageFinshed();
 
 	UFUNCTION()
+	void ComboCommit(FGameplayEventData Payload);
+
+	UFUNCTION()
+	void Hit(FGameplayEventData Payload);
+
+	UFUNCTION()
 	void UpdateCombo(FGameplayEventData Payload); //payload is just all the info from the event.
+
+	UPROPERTY(EditDefaultsOnly, Category = "Melee")
+	TSubclassOf<UGameplayEffect> hitEffect;
 };

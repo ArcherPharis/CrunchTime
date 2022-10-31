@@ -17,8 +17,7 @@ void UGA_Sprint::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const 
 
 void UGA_Sprint::StoppedSprinting()
 {
-	UE_LOG(LogTemp, Warning, TEXT("We stopped running, event recieved."));
 	EndAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(), GetCurrentActivationInfo(), false, false);
-	character->RegenStamina(SprintRegenEffect);
+	//character->RegenStamina(SprintRegenEffect);
 }
 
