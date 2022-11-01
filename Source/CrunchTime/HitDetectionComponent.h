@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (BlueprintSpawnableComponent))
 class CRUNCHTIME_API UHitDetectionComponent : public UCapsuleComponent
 {
 	GENERATED_BODY()
@@ -21,6 +21,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HitDetection")
 	FORCEINLINE	void SetEffectMagnitude(float newMagnitude) { AttackEffectMagnitutde = newMagnitude; }
 
+
+
 private:
 	UFUNCTION()
 	void Overlapped(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Sweep);
@@ -30,6 +32,7 @@ private:
 	FGameplayTag HitEventTag;
 
 	float AttackEffectMagnitutde = 1;
+
 
 
 };

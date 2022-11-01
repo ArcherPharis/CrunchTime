@@ -28,13 +28,13 @@ void ACTCharacterBase::ApplyInitialEffect()
 		ApplyEffectToSelf(effect);
 	}
 
-	//abilitySystemComp->GetGameplayAttributeValueChangeDelegate(attributeSet->GetHealthAttribute().AddUObject)//add something to health changed fixed k2shit
+	
 }
 
 void ACTCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	abilitySystemComp->InitAbilityActorInfo(NewController, this); //can also be done in begin play if you don't care about controller
+	abilitySystemComp->InitAbilityActorInfo(this, this); //can also be done in begin play if you don't care about controller
 	GiveAbility(BasicAttackAbility);
 	GiveAbility(SprintAbility);
 

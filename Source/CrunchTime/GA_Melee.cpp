@@ -35,8 +35,8 @@ void UGA_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const F
 	UAbilityTask_WaitGameplayEvent* WaitHit = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitTag, nullptr, false, false);
 	if (WaitHit)
 	{
-		WaitCommitChange->EventReceived.AddDynamic(this, &UGA_Melee::Hit);
-		WaitCommitChange->ReadyForActivation();
+		WaitHit->EventReceived.AddDynamic(this, &UGA_Melee::Hit);
+		WaitHit->ReadyForActivation();
 	}
 }
 
@@ -79,6 +79,7 @@ void UGA_Melee::ComboCommit(FGameplayEventData Payload)
 void UGA_Melee::Hit(FGameplayEventData Payload)
 {
 
+
 	if (Payload.TargetData.Num() == 0) return;
 
 	for (TSharedPtr<FGameplayAbilityTargetData>& data : Payload.TargetData.Data)
@@ -86,17 +87,19 @@ void UGA_Melee::Hit(FGameplayEventData Payload)
 		for (TWeakObjectPtr<AActor>& actorWeakPtr : data->GetActors())
 		{
 			AActor* HitTarget = actorWeakPtr.Get();
-			
-
-
-			//UE_LOG(LogTemp, Warning, TEXT("I am now hitting %s"), *HitTarget->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("I am now hitting %s, with magnitude of: %f"), *HitTarget->GetName(), Payload.EventMagnitude);
 		}
 	}
 
 
 
 	FGameplayEffectSpecHandle handle = MakeOutgoingGameplayEffectSpec(hitEffect, Payload.EventMagnitude);
-	//K2_ApplyGameplayEffectSpecToOwner()
+	K2_ApplyGameplayEffectSpecToTarget(handle, Payload.TargetData);
+	//K2_ApplyGameplayEffectSpecToOwner(handle);
+
+
+
+	
 
 
 }
