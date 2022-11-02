@@ -87,7 +87,7 @@ void UGA_Melee::Hit(FGameplayEventData Payload)
 		for (TWeakObjectPtr<AActor>& actorWeakPtr : data->GetActors())
 		{
 			AActor* HitTarget = actorWeakPtr.Get();
-			UE_LOG(LogTemp, Warning, TEXT("I am now hitting %s, with magnitude of: %f"), *HitTarget->GetName(), Payload.EventMagnitude);
+			
 		}
 	}
 
@@ -95,6 +95,9 @@ void UGA_Melee::Hit(FGameplayEventData Payload)
 
 	FGameplayEffectSpecHandle handle = MakeOutgoingGameplayEffectSpec(hitEffect, Payload.EventMagnitude);
 	K2_ApplyGameplayEffectSpecToTarget(handle, Payload.TargetData);
+
+
+
 	//K2_ApplyGameplayEffectSpecToOwner(handle);
 
 
