@@ -29,11 +29,17 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, Category = "GameplayAbility", meta = (DisplayName = "HealthUpdated"))
 	void BP_HealthUpdated(float Health, float healthDelta, float maxHealth);
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "GameplayAbility", meta = (DisplayName = "HealthUpdated"))
+	void BP_HealthUpdated(float Health, float healthDelta, float maxHealth);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 	FORCEINLINE class UCTAttributeSet* GetAttributeSet() const { return attributeSet; }
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character")
+	UAnimMontage* hitReactMontage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character")
 	UAnimMontage* hitReactMontage;

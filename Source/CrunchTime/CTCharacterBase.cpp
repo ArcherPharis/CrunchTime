@@ -28,6 +28,9 @@ void ACTCharacterBase::ApplyInitialEffect()
 	}
 
 	abilitySystemComp->GetGameplayAttributeValueChangeDelegate(attributeSet->GetHealthAttribute()).AddUObject(this, &ACTCharacterBase::HealthChanged);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }
 
@@ -40,6 +43,9 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 =======
 	GiveAbility(SprintAbility);
 	
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 }
@@ -89,6 +95,11 @@ UAbilitySystemComponent* ACTCharacterBase::GetAbilitySystemComponent() const
 void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility)
 {
 	abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility));
+}
+
+void ACTCharacterBase::HealthChanged(const FOnAttributeChangeData& ChangedData)
+{
+	BP_HealthUpdated(ChangedData.NewValue, ChangedData.NewValue - ChangedData.OldValue, attributeSet->GetMaxHealth());
 }
 
 void ACTCharacterBase::HealthChanged(const FOnAttributeChangeData& ChangedData)
