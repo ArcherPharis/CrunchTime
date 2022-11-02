@@ -24,7 +24,20 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Melee")
 	FGameplayTag ComboChangeTag;
 
+<<<<<<< Updated upstream
 	FGameplayTag nextComboTag;
+=======
+	UPROPERTY(EditDefaultsOnly, Category = "Melee")
+	FGameplayTag ComboCommitTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Melee")
+	FGameplayTag HitTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Melee")
+		float HitPushSpeed = 500.f;
+
+	FName NextComboSectionName;
+>>>>>>> Stashed changes
 
 	UFUNCTION()
 	void MontageFinshed();

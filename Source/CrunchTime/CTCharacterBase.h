@@ -26,11 +26,17 @@ protected:
 	void ApplyEffectToSelf(const TSubclassOf<class UGameplayEffect>& effectToApply);
 	void BasicAttack();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "GameplayAbility", meta = (DisplayName = "HealthUpdated"))
+	void BP_HealthUpdated(float Health, float healthDelta, float maxHealth);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const;
 	FORCEINLINE class UCTAttributeSet* GetAttributeSet() const { return attributeSet; }
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Character")
+	UAnimMontage* hitReactMontage;
 
 private:
 
@@ -47,8 +53,37 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
 	TSubclassOf<class UGameplayAbility> BasicAttackAbility;
 
+<<<<<<< Updated upstream
 	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility);
 
+=======
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
+	TSubclassOf<class UGameplayAbility> SprintAbility;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	FGameplayTag BasicAttackCombo;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	class UHitDetectionComponent* hitDetectionComp;
+
+
+
+
+
+	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility);
+
+	void HealthChanged(const FOnAttributeChangeData& ChangedData);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Character")
+	float sprintMultiplier = 1.5f;
+
+
+
+	bool bIsRunning = false;
+
+
+
+>>>>>>> Stashed changes
 
 
 

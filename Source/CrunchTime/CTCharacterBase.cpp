@@ -19,7 +19,16 @@ ACTCharacterBase::ACTCharacterBase()
 
 void ACTCharacterBase::ApplyInitialEffect()
 {
+<<<<<<< Updated upstream
 	ApplyEffectToSelf(InitialEffect);
+=======
+	for (auto effect : InitialEffects)
+	{
+		ApplyEffectToSelf(effect);
+	}
+
+	abilitySystemComp->GetGameplayAttributeValueChangeDelegate(attributeSet->GetHealthAttribute()).AddUObject(this, &ACTCharacterBase::HealthChanged);
+>>>>>>> Stashed changes
 }
 
 void ACTCharacterBase::PossessedBy(AController* NewController)
@@ -27,6 +36,11 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	abilitySystemComp->InitAbilityActorInfo(NewController, this); //can also be done in begin play if you don't care about controller
 	GiveAbility(BasicAttackAbility);
+<<<<<<< Updated upstream
+=======
+	GiveAbility(SprintAbility);
+	
+>>>>>>> Stashed changes
 
 }
 
@@ -34,6 +48,7 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 void ACTCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	ApplyInitialEffect();
 	
 }
 
@@ -74,6 +89,11 @@ UAbilitySystemComponent* ACTCharacterBase::GetAbilitySystemComponent() const
 void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility)
 {
 	abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility));
+}
+
+void ACTCharacterBase::HealthChanged(const FOnAttributeChangeData& ChangedData)
+{
+	BP_HealthUpdated(ChangedData.NewValue, ChangedData.NewValue - ChangedData.OldValue, attributeSet->GetMaxHealth());
 }
 
 

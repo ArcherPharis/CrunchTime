@@ -4,6 +4,12 @@
 #include "GA_Melee.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+<<<<<<< Updated upstream
+=======
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
+>>>>>>> Stashed changes
 
 void UGA_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -32,6 +38,89 @@ void UGA_Melee::MontageFinshed()
 	EndAbility(GetCurrentAbilitySpecHandle(), GetCurrentActorInfo(),GetCurrentActivationInfo(), false, false);
 }
 
+<<<<<<< Updated upstream
+=======
+void UGA_Melee::ComboCommit(FGameplayEventData Payload)
+{
+
+	if (NextComboSectionName == "")
+	{
+		return;
+	}
+
+	USkeletalMeshComponent* mesh = GetOwningComponentFromActorInfo();
+
+	if (mesh)
+	{
+		UAnimInstance* animbp = mesh->GetAnimInstance();
+
+		if (animbp->Montage_GetCurrentSection() == NextComboSectionName)
+		{
+			return;
+		}
+
+
+
+		if (animbp)
+		{
+			animbp->Montage_SetNextSection(animbp->Montage_GetCurrentSection(), NextComboSectionName, animbp->GetCurrentActiveMontage());
+			
+		}
+	}
+
+}
+
+void UGA_Melee::Hit(FGameplayEventData Payload)
+{
+
+
+	if (Payload.TargetData.Num() == 0) return;
+
+	//for (TSharedPtr<FGameplayAbilityTargetData>& data : Payload.TargetData.Data)
+	//{
+	//	for (TWeakObjectPtr<AActor>& actorWeakPtr : data->GetActors())
+	//	{
+	//		AActor* HitTarget = actorWeakPtr.Get();
+	//		
+	//	}
+	//}
+
+	ACharacter* Avatar = Cast<ACharacter>(GetAvatarActorFromActorInfo());
+	Avatar->GetCharacterMovement()->AddImpulse(GetAvatarActorFromActorInfo()->GetActorForwardVector() * HitPushSpeed * Payload.EventMagnitude, true);
+
+
+	TArray<AActor*> TargetActors = UAbilitySystemBlueprintLibrary::GetActorsFromTargetData(Payload.TargetData, 0);
+
+
+	for (AActor*& TargetActor : TargetActors)
+	{
+		ACharacter* TargetAsCharacter = Cast<ACharacter>(TargetActor);
+
+		if (TargetAsCharacter)
+		{
+			TargetAsCharacter->GetCharacterMovement()->AddImpulse(GetAvatarActorFromActorInfo()->GetActorForwardVector() * HitPushSpeed * Payload.EventMagnitude, true);
+		}
+	}
+
+
+	FGameplayEffectSpecHandle handle = MakeOutgoingGameplayEffectSpec(hitEffect, Payload.EventMagnitude);
+	handle.Data.Get()->SetContext(Payload.ContextHandle);
+	handle.Data.Get()->GetContext().IsValid();
+	handle.Data.Get()->GetContext().GetInstigatorAbilitySystemComponent();
+	K2_ApplyGameplayEffectSpecToTarget(handle, Payload.TargetData);
+
+
+
+	//K2_ApplyGameplayEffectSpecToOwner(handle);
+
+
+
+	
+
+
+}
+
+>>>>>>> Stashed changes
 void UGA_Melee::UpdateCombo(FGameplayEventData Payload)
 {
 	nextComboTag = Payload.EventTag;
