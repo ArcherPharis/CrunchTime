@@ -32,6 +32,7 @@ void ACTCrunch::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("BasicAttack", IE_Pressed, this, &ACTCrunch::BasicAttack);
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACTCrunch::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACTCrunch::StopSprint);
+	PlayerInputComponent->BindAction("Cast", IE_Pressed, this, &ACTCrunch::Cast);
 
 
 

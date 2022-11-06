@@ -34,6 +34,7 @@ protected:
 	void BasicAttack();
 	void Sprint();
 	void StopSprint();
+	void Cast();
 
 public:	
 	// Called every frame
@@ -42,6 +43,11 @@ public:
 	void RegenStamina(TSubclassOf<class UGameplayEffect> regenEffect);
 	FORCEINLINE class UCTAttributeSet* GetAttributeSet() const { return attributeSet; }
 	void SprintDepletedStopSprint();
+	UFUNCTION(BlueprintImplementableEvent, Category = "GameplayAbility", meta = (DisplayName = "HealthUpdated"))
+	void BP_HealthUpdated(float Health, float healthDelta, float maxHealth);
+
+	UFUNCTION(BlueprintCallable, Category = "GameplayAbility")
+	void SpawnCurrentMagic();
 
 private:
 	bool IsStaminaFull();
@@ -61,11 +67,20 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
 	TSubclassOf<class UGameplayAbility> SprintAbility;
 
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
+	TSubclassOf<class UGameplayAbility> CastAbility;
+
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
+	TSubclassOf<class AProjectile> currentMagic;
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
+	FName magicSocket;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	FGameplayTag BasicAttackCombo;
 
+
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
-		class UHitDetectionComponent* hitDetectionComp;
+	class UHitDetectionComponent* hitDetectionComp;
 
 
 	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility);
@@ -73,7 +88,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	float sprintMultiplier = 1.5f;
 
-
+	void HealthChanged(const FOnAttributeChangeData& ChangedData);
 
 	bool bIsRunning = false;
 

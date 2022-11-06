@@ -6,6 +6,8 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HitDetectionComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Projectile.h"
 #include "CTAttributeSet.h"
 
 // Sets default values
@@ -27,7 +29,7 @@ void ACTCharacterBase::ApplyInitialEffect()
 	{
 		ApplyEffectToSelf(effect);
 	}
-
+	abilitySystemComp->GetGameplayAttributeValueChangeDelegate(attributeSet->GetHealthAttribute()).AddUObject(this, &ACTCharacterBase::HealthChanged);
 	
 }
 
@@ -37,6 +39,7 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 	abilitySystemComp->InitAbilityActorInfo(this, this); //can also be done in begin play if you don't care about controller
 	GiveAbility(BasicAttackAbility);
 	GiveAbility(SprintAbility);
+	GiveAbility(CastAbility);
 
 
 }
@@ -45,6 +48,7 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 void ACTCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	ApplyInitialEffect();
 	
 }
 
@@ -70,6 +74,20 @@ void ACTCharacterBase::BasicAttack()
 	
 }
 
+void ACTCharacterBase::Cast()
+{
+	FGameplayAbilitySpec* castSpec = abilitySystemComp->FindAbilitySpecFromClass(CastAbility);
+
+	if (castSpec->IsActive())
+	{
+
+	}
+	else
+	{
+		abilitySystemComp->TryActivateAbilityByClass(CastAbility);
+	}
+}
+
 void ACTCharacterBase::Sprint()
 {
 	if (GetVelocity().Length() > 0)
@@ -89,6 +107,8 @@ void ACTCharacterBase::StopSprint()
 
 	
 }
+
+
 
 // Called every frame
 void ACTCharacterBase::Tick(float DeltaTime)
@@ -119,6 +139,12 @@ void ACTCharacterBase::SprintDepletedStopSprint()
 	StopSprint();
 }
 
+void ACTCharacterBase::SpawnCurrentMagic()
+{
+	AProjectile* projectile = GetWorld()->SpawnActor<AProjectile>(currentMagic,GetMesh()->GetSocketLocation(magicSocket), GetMesh()->GetSocketRotation(magicSocket));
+	projectile->SetOwner(this);
+}
+
 bool ACTCharacterBase::IsStaminaFull()
 {
 	if (attributeSet->GetStamina() < attributeSet->GetMaxStamina())
@@ -133,6 +159,11 @@ bool ACTCharacterBase::IsStaminaFull()
 void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility)
 {
 	abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility));
+}
+
+void ACTCharacterBase::HealthChanged(const FOnAttributeChangeData& ChangedData)
+{
+	BP_HealthUpdated(ChangedData.NewValue, ChangedData.NewValue - ChangedData.OldValue, attributeSet->GetMaxHealth());
 }
 
 
