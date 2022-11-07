@@ -35,8 +35,7 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	abilitySystemComp->InitAbilityActorInfo(this, this); //can also be done in begin play if you don't care about controller
-	GiveAbility(BasicAttackAbility);
-	GiveAbility(SprintAbility);
+
 
 
 }
@@ -45,7 +44,13 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 void ACTCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	ApplyInitialEffect();
+	GiveAbility(BasicAttackAbility);
+
+	for (auto& abilityKeyValuePair : InitialAbilities)
+	{
+		GiveAbility(abilityKeyValuePair.Value, static_cast<int>(abilityKeyValuePair.Key));
+	}
 }
 
 void ACTCharacterBase::ApplyEffectToSelf(const TSubclassOf<class UGameplayEffect>& effectToApply)
@@ -130,9 +135,9 @@ bool ACTCharacterBase::IsStaminaFull()
 
 
 
-void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility)
+void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility, int inputID)
 {
-	abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility));
+	abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility, 1, inputID));
 }
 
 

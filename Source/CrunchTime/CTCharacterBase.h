@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
+#include "CTAbilityTypes.h"
 #include "CTCharacterBase.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStopSprinting);
@@ -61,6 +62,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
 	TSubclassOf<class UGameplayAbility> SprintAbility;
 
+	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbility")
+	TMap<ECTAbilityInputID, TSubclassOf<UGameplayAbility>> InitialAbilities;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	FGameplayTag BasicAttackCombo;
 
@@ -68,7 +72,7 @@ private:
 		class UHitDetectionComponent* hitDetectionComp;
 
 
-	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility);
+	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility, int inputID = -1);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	float sprintMultiplier = 1.5f;

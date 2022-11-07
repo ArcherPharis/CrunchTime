@@ -4,6 +4,7 @@
 #include "CTCrunch.h"
 #include "GameframeWork/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "AbilitySystemComponent.h"
 
 ACTCrunch::ACTCrunch()
 {
@@ -32,7 +33,11 @@ void ACTCrunch::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("BasicAttack", IE_Pressed, this, &ACTCrunch::BasicAttack);
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &ACTCrunch::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &ACTCrunch::StopSprint);
-
+	GetAbilitySystemComponent()->BindAbilityActivationToInputComponent(PlayerInputComponent, FGameplayAbilityInputBinds("Confirm", 
+		"Cancel", 
+		"ECTAbilityInputID", 
+		static_cast<int32>(ECTAbilityInputID::Confirm),
+		static_cast<int32>(ECTAbilityInputID::Cancel)));
 
 
 
