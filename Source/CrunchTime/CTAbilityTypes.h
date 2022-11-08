@@ -14,5 +14,6 @@ enum class ECTAbilityInputID : uint8
 	AbilityOne,
 	AbilityTwo,
 	AbilityThree,
-	AbilityFour
+	AbilityFour,
+	Dodge
 };

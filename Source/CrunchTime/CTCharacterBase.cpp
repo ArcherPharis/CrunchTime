@@ -46,6 +46,7 @@ void ACTCharacterBase::BeginPlay()
 	Super::BeginPlay();
 	ApplyInitialEffect();
 	GiveAbility(BasicAttackAbility);
+	GiveAbility(SprintAbility);
 
 	for (auto& abilityKeyValuePair : InitialAbilities)
 	{
