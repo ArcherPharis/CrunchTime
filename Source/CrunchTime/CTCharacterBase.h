@@ -9,7 +9,11 @@
 #include "CTAbilityTypes.h"
 #include "CTCharacterBase.generated.h"
 
+
+class UCTGameplayAbilityBase;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnStopSprinting);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAbilityAdded, UCTGameplayAbilityBase*, newAbility);
 
 UCLASS()
 class CRUNCHTIME_API ACTCharacterBase : public ACharacter, public IAbilitySystemInterface
@@ -25,6 +29,7 @@ public:
 	bool CharacterIsSprinting() const { return bIsRunning; }
 
 	FOnStopSprinting onStopSprinting;
+	FOnAbilityAdded onAbilityAdded;
 
 protected:
 	// Called when the game starts or when spawned
@@ -72,7 +77,7 @@ private:
 		class UHitDetectionComponent* hitDetectionComp;
 
 
-	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility, int inputID = -1);
+	void GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility, int inputID = -1, bool broadCast = false);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	float sprintMultiplier = 1.5f;

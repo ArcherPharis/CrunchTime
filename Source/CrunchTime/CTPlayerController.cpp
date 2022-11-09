@@ -22,6 +22,7 @@ void ACTPlayerController::OnPossess(APawn* InPawn)
 	{
 		Crunch->GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(Crunch->GetAttributeSet()->GetHealthAttribute()).AddUObject(this, &ACTPlayerController::HealthUpdated);
 		Crunch->GetAbilitySystemComponent()->GetGameplayAttributeValueChangeDelegate(Crunch->GetAttributeSet()->GetStaminaAttribute()).AddUObject(this, &ACTPlayerController::StaminaUpdated);
+		Crunch->onAbilityAdded.AddDynamic(this, &ACTPlayerController::AbilityAdded);
 		Crunch->ApplyInitialEffect();
 	}
 
@@ -42,4 +43,9 @@ void ACTPlayerController::StaminaUpdated(const FOnAttributeChangeData& Attribute
 	{
 		Crunch->SprintDepletedStopSprint();
 	}
+}
+
+void ACTPlayerController::AbilityAdded(UCTGameplayAbilityBase* newAbility)
+{
+	inGameUI->AddNewAbilityEntry(newAbility);
 }

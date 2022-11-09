@@ -33,5 +33,8 @@ private:
 	void HealthUpdated(const FOnAttributeChangeData& AttributeData);
 
 	void StaminaUpdated(const FOnAttributeChangeData& AttributeData);
+
+	UFUNCTION()
+	void AbilityAdded(class UCTGameplayAbilityBase* newAbility);
 	
 };

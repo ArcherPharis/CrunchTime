@@ -20,5 +20,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "InGameUI")
 	void UpdateStamina(float newStamina, float maxStamina);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddNewAbilityEntry(const class UCTGameplayAbilityBase* newAbility);
 	
 };

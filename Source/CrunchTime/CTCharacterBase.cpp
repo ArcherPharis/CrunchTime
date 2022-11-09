@@ -7,6 +7,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "HitDetectionComponent.h"
 #include "CTAttributeSet.h"
+#include "CTGameplayAbilityBase.h"
 
 // Sets default values
 ACTCharacterBase::ACTCharacterBase()
@@ -50,7 +51,7 @@ void ACTCharacterBase::BeginPlay()
 
 	for (auto& abilityKeyValuePair : InitialAbilities)
 	{
-		GiveAbility(abilityKeyValuePair.Value, static_cast<int>(abilityKeyValuePair.Key));
+		GiveAbility(abilityKeyValuePair.Value, static_cast<int>(abilityKeyValuePair.Key), true);
 	}
 }
 
@@ -136,9 +137,15 @@ bool ACTCharacterBase::IsStaminaFull()
 
 
 
-void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility, int inputID)
+void ACTCharacterBase::GiveAbility(const TSubclassOf<class UGameplayAbility>& newAbility, int inputID, bool broadCast)
 {
-	abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility, 1, inputID));
+	
+	FGameplayAbilitySpecHandle AbilitySpecHandle = abilitySystemComp->GiveAbility(FGameplayAbilitySpec(newAbility, 1, inputID));
+
+	if (broadCast)
+	{
+		onAbilityAdded.Broadcast(Cast<UCTGameplayAbilityBase>(GetAbilitySystemComponent()->FindAbilitySpecFromHandle(AbilitySpecHandle)->Ability));
+	}
 }
 
 
