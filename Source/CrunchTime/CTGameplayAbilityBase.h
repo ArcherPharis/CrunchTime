@@ -19,6 +19,8 @@ class CRUNCHTIME_API UCTGameplayAbilityBase : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+
 	UFUNCTION(BlueprintCallable, Category = "GameplayAbilityBase")
 	float GetCooldownDuration() const;
 
@@ -35,6 +37,11 @@ protected:
 	virtual bool CommitAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) override;
 
 
+	void LaunchActorAsCharacter(AActor* Target, const FVector& Dir, float speed) const;
+	void LaunchAllActorInTargetData(const FGameplayAbilityTargetDataHandle& targetData, const FVector& Dir, float speed) const;
+
+	FORCEINLINE class ACTCharacterBase* GetAvatarAsCharacter() const { return AvatarCharacterBase; }
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "GameplayAbilityBase")
 	UTexture2D* AbilityIcon;
@@ -42,5 +49,7 @@ private:
 public:
 	UFUNCTION(BlueprintCallable, Category = "GameplayAbilityBase")
 	FName GetRandomNameFromTagContainer(const FGameplayTagContainer& container) const;
+
+	ACTCharacterBase* AvatarCharacterBase;
 	
 };

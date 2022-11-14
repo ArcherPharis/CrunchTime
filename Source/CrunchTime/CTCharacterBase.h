@@ -31,6 +31,15 @@ public:
 	FOnStopSprinting onStopSprinting;
 	FOnAbilityAdded onAbilityAdded;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameplayAbility")
+	UAnimMontage* KnockedMontage;
+
+	void SetIsAiming(bool aiming);
+
+	UFUNCTION(BlueprintCallable, Category = "CharacterBase")
+	FORCEINLINE bool GetIsAiming() const { return bIsAiming; }
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -82,7 +91,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character")
 	float sprintMultiplier = 1.5f;
 
-
+	bool bIsAiming = false;
 
 	bool bIsRunning = false;
 

@@ -8,6 +8,7 @@
 #include "HitDetectionComponent.h"
 #include "CTAttributeSet.h"
 #include "CTGameplayAbilityBase.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ACTCharacterBase::ACTCharacterBase()
@@ -38,6 +39,15 @@ void ACTCharacterBase::PossessedBy(AController* NewController)
 	abilitySystemComp->InitAbilityActorInfo(this, this); //can also be done in begin play if you don't care about controller
 
 
+
+}
+
+void ACTCharacterBase::SetIsAiming(bool aiming)
+{
+	bIsAiming = aiming;
+
+	GetCharacterMovement()->bOrientRotationToMovement = !bIsAiming;
+	bUseControllerRotationYaw = bIsAiming;
 
 }
 

@@ -3,6 +3,16 @@
 
 #include "CTGameplayAbilityBase.h"
 #include "CTAttributeSet.h"
+#include "GameFramework/Character.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "CTCharacterBase.h"
+
+void UCTGameplayAbilityBase::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+{
+	Super:: ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	AvatarCharacterBase = Cast<ACTCharacterBase>(GetAvatarActorFromActorInfo());
+
+}
 
 float UCTGameplayAbilityBase::GetCooldownDuration() const
 {
@@ -49,6 +59,27 @@ bool UCTGameplayAbilityBase::CommitAbility(const FGameplayAbilitySpecHandle Hand
 		return true;
 	}
 	return false;
+}
+
+void UCTGameplayAbilityBase::LaunchActorAsCharacter(AActor* Target, const FVector& Dir, float speed) const
+{
+	ACharacter* ActorAsChar = Cast<ACharacter>(Target);
+
+	if (ActorAsChar)
+	{
+		ActorAsChar->LaunchCharacter(Dir.GetSafeNormal() * speed, true, true);
+	}
+}
+
+void UCTGameplayAbilityBase::LaunchAllActorInTargetData(const FGameplayAbilityTargetDataHandle& targetData, const FVector& Dir, float speed) const
+{
+	TArray<AActor*> actors = UAbilitySystemBlueprintLibrary::GetAllActorsFromTargetData(targetData);
+	
+	for (auto targetActor : actors)
+	{
+		LaunchActorAsCharacter(targetActor, Dir, speed);
+	}
+
 }
 
 FName UCTGameplayAbilityBase::GetRandomNameFromTagContainer(const FGameplayTagContainer& container) const
